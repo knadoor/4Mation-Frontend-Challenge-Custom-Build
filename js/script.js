@@ -176,11 +176,21 @@ function getEXIF(photo_id) {
 
 function jsonExifParser(formatExifURL) {
 
+    // This flag relates to the Error Codes that are provided if something is wrong with the EXIF service
+    // Default setting for flag = 0, relates to 'no errors' being present and that EXIF can load
+    var error = 0;
+
     // JSON request to Flickr
     $.getJSON(formatExifURL, function (data) {
         console.log("Output of the getEXIF method is: " + data.photo);
+        console.log("ERROR CODE response from the service, if available: " + data.code);
 
-        if(data.photo.exif) {
+        // Check the error status
+        if(data.code) {
+            error = data.code;
+        }
+
+        if(error == 0) {
             $("#heading").append(
                 '<div class="title">Title</div>'
                 +'<div class="value">Value</div>');
@@ -201,9 +211,14 @@ function jsonExifParser(formatExifURL) {
 
                 $(".loading").fadeOut();
             });
-        } else {
-            document.getElementById("exifTitle").innerHTML = "<strong>EXIF data currently not available</strong>";
+        } else if (error == 2) {
+            document.getElementById("exifTitle").innerHTML = "<strong>EXIF data has not been made public</strong>";
             $(".loading").fadeOut();
+            error = 0;
+        } else {
+            document.getElementById("exifTitle").innerHTML = "<strong>EXIF data could not be retrieved!</strong>";
+            $(".loading").fadeOut();
+            error = 0;
         }
     });
 }
