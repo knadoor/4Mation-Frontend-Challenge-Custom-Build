@@ -20,3 +20,6 @@ The JSON response would be in this case:
 {"stat":"fail","code":2,"message":"Permission denied"}
 
 This can be confirmed by accessing the JavaScript console and opening the JSON response link found after the "EXIF request URL is" string.
+
+EDIT:
+Newer version of script has improved error checking and I've added meaningful error messages.
